@@ -8,13 +8,14 @@ const {
     updateMenuItem,
     deleteMenuItem
 } = require("../controllers/menuitemController");
+const authenticateUser = require("../middlewares/authMiddleware")
 
 const router = express.Router();
 
 router.get("/", getMenuItems);
 router.get("/:id", getMenuItemById);
-router.post("/", createMenuItem);
-router.put("/:id", updateMenuItem);
-router.delete("/:id", deleteMenuItem);
+router.post("/", authenticateUser, createMenuItem);
+router.put("/:id", authenticateUser, updateMenuItem);
+router.delete("/:id", authenticateUser, deleteMenuItem);
 
 module.exports = router;
