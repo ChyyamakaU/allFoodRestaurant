@@ -1,20 +1,11 @@
 /* eslint-disable no-undef */
+require("dotenv").config();
 
-const express = require("express");
+const app = require("./src/app");
 const sequelize = require("./config/database");
 require("./model");
 
-const app = express();
-
 const PORT = process.env.PORT || 5000;
-
-app.use(express.json());
-
-app.get("/", (req, res) => {
-    res.json({
-        message: "AllFood Restaurant API is running"
-    });
-});
 
 sequelize.sync()
     .then(() => {
