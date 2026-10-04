@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const { Category } = require("../../model");
 
-// Get all categories
+// to get
 const getCategories = async (req, res) => {
     try {
         const categories = await Category.findAll();
@@ -15,7 +15,7 @@ const getCategories = async (req, res) => {
     }
 };
 
-// Get one category
+// Get with ID
 const getCategoryById = async (req, res) => {
     try {
         const category = await Category.findByPk(req.params.id);
@@ -35,7 +35,7 @@ const getCategoryById = async (req, res) => {
     }
 };
 
-// Create category
+// Create
 const createCategory = async (req, res) => {
     try {
         const { name, description } = req.body;
@@ -60,7 +60,7 @@ const createCategory = async (req, res) => {
     }
 };
 
-// Update category
+// Update
 const updateCategory = async (req, res) => {
     try {
         const category = await Category.findByPk(req.params.id);
@@ -87,7 +87,7 @@ const updateCategory = async (req, res) => {
     }
 };
 
-// Delete category
+// Delete 
 const deleteCategory = async (req, res) => {
     try {
         const category = await Category.findByPk(req.params.id);
