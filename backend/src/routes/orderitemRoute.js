@@ -6,7 +6,7 @@ const {
     getOrderItemById,
     createOrderItem,
     deleteOrderItem
-} = require("../controllers/orderItemController");
+} = require("../controllers/orderitemController");
 
 const router = express.Router();
 
