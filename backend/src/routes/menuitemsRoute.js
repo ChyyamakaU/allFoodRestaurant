@@ -1,13 +1,7 @@
 /* eslint-disable no-undef */
 const express = require("express");
 
-const {
-    getMenuItems,
-    getMenuItemById,
-    createMenuItem,
-    updateMenuItem,
-    deleteMenuItem
-} = require("../controllers/menuitemController");
+const { getMenuItems, getMenuItemById, createMenuItem, updateMenuItem, deleteMenuItem} = require("../controllers/menuitemController");
 const authenticateUser = require("../middlewares/authMiddleware")
 
 const router = express.Router();

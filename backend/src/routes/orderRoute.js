@@ -6,10 +6,11 @@ const authenticateUser = require("../middlewares/authMiddleware")
 
 const router = express.Router();
 
-router.get("/", getOrders);
-router.get("/:id", getOrderById);
+router.get("/", authenticateUser, getOrders);
+router.get("/:id", authenticateUser, getOrderById);
 router.post("/", authenticateUser, createOrder);
 router.put("/:id", authenticateUser, updateOrder);
 router.delete("/:id", authenticateUser, deleteOrder);
 
 module.exports = router;
+
