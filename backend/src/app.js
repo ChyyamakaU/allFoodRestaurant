@@ -4,6 +4,7 @@ const categoryRoutes = require("./routes/categoryRoute");
 const menuitems =require("./routes/menuitemsRoute");
 const orders = require("./routes/orderRoute")
 const orderitem = require("./routes/orderitemRoute")
+const users = require("./routes/userRoute");
 
 const app = express();
 
@@ -13,5 +14,6 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/menuitems", menuitems);
 app.use("/api/orders", orders)
 app.use("/api/orderitem", orderitem)
+app.use("/api/users", users)
 
 module.exports = app;
