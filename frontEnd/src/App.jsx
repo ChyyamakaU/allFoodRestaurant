@@ -1,8 +1,9 @@
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
-import Menu from "./components/Menu";
+import Menu from "./components/MenuCard";
 import Order from "./components/order";
 import Orders from "./components/Category";
+import AllMenu from "./components/Menu"
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
             <Menu />
             <Order />
             <Orders />
+            <AllMenu/>
         </>
     );
 }
