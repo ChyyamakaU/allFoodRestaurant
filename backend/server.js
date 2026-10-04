@@ -1,10 +1,14 @@
 /* eslint-disable no-undef */
+
 const express = require("express");
 const sequelize = require("./config/database");
+require("./model");
 
 const app = express();
 
 const PORT = process.env.PORT || 5000;
+
+app.use(express.json());
 
 app.get("/", (req, res) => {
     res.json({
@@ -12,7 +16,12 @@ app.get("/", (req, res) => {
     });
 });
 
-sequelize.authenticate()
+sequelize.sync()
+    .then(() => {
+        console.log("Database tables created successfully");
+
+        return sequelize.authenticate();
+    })
     .then(() => {
         console.log("Database connected successfully");
 

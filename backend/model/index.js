@@ -1,8 +1,9 @@
-const User = require("./User");
-const Category = require("./Category");
-const MenuItem = require("./MenuItem");
-const Order = require("./Order");
-const OrderItem = require("./OrderItem");
+/* eslint-disable no-undef */
+const User = require("./user");
+const Category = require("./category");
+const MenuItem = require("./menuItem");
+const Order = require("./order");
+const OrderItem = require("./orderItem");
 
 // User → Orders
 User.hasMany(Order, {
