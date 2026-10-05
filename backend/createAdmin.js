@@ -1,10 +1,19 @@
-/* eslint-disable no-undef */
-require("dotenv").config();
-
 const bcrypt = require("bcrypt");
+const { Sequelize } = require("sequelize");
 
-const sequelize = require("./config/database");
-const { User } = require("./model");
+const sequelize = new Sequelize(
+    "allfood_restaurant",
+    "postgres",
+    "allFood12345",
+    {
+        host: "localhost",
+        port: 5432,
+        dialect: "postgres",
+        logging: false
+    }
+);
+
+const User = require("./model/user");
 
 const createAdmin = async () => {
     try {
@@ -25,10 +34,7 @@ const createAdmin = async () => {
 
             console.log("Existing user has been made admin.");
         } else {
-            const hashedPassword = await bcrypt.hash(
-                password,
-                10
-            );
+            const hashedPassword = await bcrypt.hash(password, 10);
 
             await User.create({
                 name,
@@ -47,7 +53,6 @@ const createAdmin = async () => {
 
     } catch (error) {
         console.error("Error creating admin:", error);
-        process.exit(1);
     }
 };
 
