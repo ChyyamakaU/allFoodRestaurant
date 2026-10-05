@@ -1,37 +1,10 @@
 /* eslint-disable no-undef */
-const { User } = require("../../model");
+
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
-const getUsers = async (req, res) => {
-    try {
-        const users = await User.findAll({
-            attributes: { exclude: ["password"] }
-        });
+const { User } = require("../../model");
 
-        res.status(200).json(users);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-const getUserById = async (req, res) => {
-    try {
-        const user = await User.findByPk(req.params.id, {
-            attributes: { exclude: ["password"] }
-        });
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
-
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
 const createUser = async (req, res) => {
     try {
@@ -49,60 +22,38 @@ const createUser = async (req, res) => {
 
         if (existingUser) {
             return res.status(409).json({
-                message: "Email already exists"
+                message: "Email is already registered"
             });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(
+            password,
+            10
+        );
 
         const user = await User.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role: "customer"
         });
-
 
         res.status(201).json({
-            id: user.id,
-            name: user.name,
-            email: user.email
+            message: "User created successfully",
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
         });
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+        console.error("Registration error:", error);
 
-const updateUser = async (req, res) => {
-    try {
-        const user = await User.findByPk(req.params.id);
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
-
-        const { name, email, password } = req.body;
-
-        let hashedPassword = user.password;
-
-        if (password) {
-            hashedPassword = await bcrypt.hash(password, 10);
-        }
-
-        await user.update({
-            name,
-            email,
-            password: hashedPassword
+        res.status(500).json({
+            message: error.message
         });
-
-        res.status(200).json({
-            id: user.id,
-            name: user.name,
-            email: user.email
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
     }
 };
 
@@ -141,7 +92,9 @@ const loginUser = async (req, res) => {
         const token = jwt.sign(
             {
                 id: user.id,
-                email: user.email
+                name: user.name,
+                email: user.email,
+                role: user.role
             },
             process.env.JWT_SECRET,
             {
@@ -151,7 +104,108 @@ const loginUser = async (req, res) => {
 
         res.status(200).json({
             message: "Login successful",
-            token
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error("Login error:", error);
+
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+
+const getUsers = async (req, res) => {
+    try {
+        const users = await User.findAll({
+            attributes: {
+                exclude: ["password"]
+            }
+        });
+
+        res.status(200).json(users);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+
+const getUserById = async (req, res) => {
+    try {
+        const user = await User.findByPk(
+            req.params.id,
+            {
+                attributes: {
+                    exclude: ["password"]
+                }
+            }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json(user);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+
+const updateUser = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        const { name, email, password, role } = req.body;
+
+        const updateData = {
+            name,
+            email
+        };
+
+        if (password) {
+            updateData.password = await bcrypt.hash(
+                password,
+                10
+            );
+        }
+
+        if (role) {
+            updateData.role = role;
+        }
+
+        await user.update(updateData);
+
+        res.status(200).json({
+            message: "User updated successfully",
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
         });
 
     } catch (error) {
@@ -160,6 +214,7 @@ const loginUser = async (req, res) => {
         });
     }
 };
+
 
 const deleteUser = async (req, res) => {
     try {
@@ -176,16 +231,18 @@ const deleteUser = async (req, res) => {
         res.status(200).json({
             message: "User deleted successfully"
         });
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
-
 module.exports = {
+    createUser,
+    loginUser,
     getUsers,
     getUserById,
-    createUser,
     updateUser,
-    deleteUser,
-    loginUser
+    deleteUser
 };

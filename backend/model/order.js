@@ -11,6 +11,16 @@ const Order = sequelize.define("Order", {
 
     userId: {
         type: DataTypes.INTEGER,
+        allowNull: true
+    },
+
+    customerName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
+    customerPhone: {
+        type: DataTypes.STRING,
         allowNull: false
     },
 

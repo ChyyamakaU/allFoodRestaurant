@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import MenuCard from "./MenuCard";
-import CategoryFilter from "./CategoryFilter";
+import CategoryFilter from "./Category";
 
-function Menu() {
+function Menu({ onAddToOrder }) {
     const [menuItems, setMenuItems] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -32,22 +32,30 @@ function Menu() {
             );
 
     return (
-        <section>
-            <h2>Our Menu</h2>
+        <section
+            id="menu"
+            className="min-h-screen bg-white px-8 py-16"
+        >
+            <div className="mx-auto max-w-6xl">
+                <h2 className="mb-8 text-center text-4xl font-bold text-slate-900">
+                    Our Menu
+                </h2>
 
-            <CategoryFilter
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-            />
+                <CategoryFilter
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    onCategoryChange={setSelectedCategory}
+                />
 
-            <div>
-                {filteredMenuItems.map((item) => (
-                    <MenuCard
-                        key={item.id}
-                        item={item}
-                    />
-                ))}
+                <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    {filteredMenuItems.map((item) => (
+                        <MenuCard
+                            key={item.id}
+                            item={item}
+                            onAddToOrder={onAddToOrder}
+                        />
+                    ))}
+                </div>
             </div>
         </section>
     );
